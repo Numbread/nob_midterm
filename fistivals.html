@@ -3,100 +3,772 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Festivals - Makati City</title>
     <link rel="shortcut icon" href="makati-logo.png" type="image/x-icon">
-    <link rel="stylesheet" href="fistivals.css">
-    <link rel="stylesheet" href="makati-favoriteplaces.css">
-    <link rel="stylesheet" href="makati.css">
-    <link rel="stylesheet" href="makatiabout.css">
-    <link rel="stylesheet" href="tour-spots.css">
-    <link rel="stylesheet" href="general.css">
-    <title>Makati - Fistivals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        :root {
+            --primary-gold: #D4AF37;
+            --deep-navy: #1a1f3a;
+            --warm-cream: #faf8f3;
+            --accent-red: #c41e3a;
+            --text-dark: #2c2c2c;
+            --text-light: #6b6b6b;
+            --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            color: var(--text-dark);
+            background: var(--warm-cream);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navigation {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 31, 58, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-pic {
+            height: 50px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-pic:hover {
+            transform: scale(1.05);
+        }
+
+        .city-title {
+            color: var(--primary-gold);
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 35px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            padding: 8px 0;
+            transition: color 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-gold);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary-gold);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary-gold);
+            transform: translateY(-3px);
+        }
+
+        .social-links img {
+            width: 18px;
+            height: 18px;
+            filter: brightness(0) invert(1);
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-top: 80px;
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.35);
+        }
+
+        .header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.85) 0%, rgba(196, 30, 58, 0.5) 100%);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            padding: 0 40px;
+        }
+
+        .header-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            opacity: 0;
+        }
+
+        .header-subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0;
+        }
+
+        /* Festivals Container */
+        .festivals-container {
+            max-width: 1400px;
+            margin: 100px auto;
+            padding: 0 40px;
+        }
+
+        .section-intro {
+            text-align: center;
+            margin-bottom: 80px;
+            opacity: 0;
+        }
+
+        .section-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--accent-red);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--deep-navy);
+            margin-bottom: 20px;
+        }
+
+        .section-description {
+            font-size: 1.15rem;
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Festival Card */
+        .festival-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            margin-bottom: 80px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-medium);
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+
+        .festival-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .festival-card:nth-child(even) {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .festival-card:nth-child(even) .festival-image-container {
+            order: 2;
+        }
+
+        .festival-card:nth-child(even) .festival-details {
+            order: 1;
+        }
+
+        .festival-image-container {
+            position: relative;
+            height: 450px;
+            overflow: hidden;
+        }
+
+        .festival-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .festival-card:hover .festival-image {
+            transform: scale(1.1);
+        }
+
+        .festival-number {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            width: 70px;
+            height: 70px;
+            background: var(--primary-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .festival-details {
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .festival-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--deep-navy);
+            margin-bottom: 25px;
+            line-height: 1.2;
+        }
+
+        .festival-description {
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+        }
+
+        .festival-tag {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--deep-navy) 0%, var(--accent-red) 100%);
+            color: white;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            align-self: flex-start;
+        }
+
+        /* Decorative Elements */
+        .floating-icon {
+            position: absolute;
+            font-size: 8rem;
+            opacity: 0.03;
+            pointer-events: none;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+        }
+
+        .floating-icon-1 { top: 10%; right: 5%; }
+        .floating-icon-2 { bottom: 15%; left: 8%; }
+        .floating-icon-3 { top: 40%; right: 10%; }
+
+        /* Footer */
+        .footer {
+            background: #0f1222;
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+            padding: 40px;
+            font-size: 0.9rem;
+            margin-top: 100px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .festival-card,
+            .festival-card:nth-child(even) {
+                grid-template-columns: 1fr;
+            }
+
+            .festival-card:nth-child(even) .festival-image-container {
+                order: 1;
+            }
+
+            .festival-card:nth-child(even) .festival-details {
+                order: 2;
+            }
+
+            .festival-image-container {
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                height: auto;
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .header-content h1 {
+                font-size: 3.5rem;
+            }
+
+            .header-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .section-title {
+                font-size: 2.2rem;
+            }
+
+            .festival-details {
+                padding: 35px;
+            }
+
+            .festival-name {
+                font-size: 2rem;
+            }
+
+            .festival-image-container {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+
+            .header-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .festival-details {
+                padding: 25px;
+            }
+
+            .festival-name {
+                font-size: 1.6rem;
+            }
+
+            .floating-icon {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="ColorDiv">
-        <div class="logo-pic1">
-            <a href="/makati.html"><img class="logo-pic" src="makati-logo.png" alt=""></a>
-        </div>
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="nav-container">
+            <div class="logo-container">
+                <a href="index.html">
+                    <img class="logo-pic" src="makati-logo.png" alt="Makati City Logo">
+                </a>
+                <span class="city-title">MAKATI</span>
+            </div>
+            
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="makati-favoriteplaces.html">Places</a>
+                <a href="Tour-Spots.html">Barangays</a>
+                <a href="makatiofficials.html">Officials</a>
+                <a href="makatgiabout.html">History</a>
+                <a href="fistivals.html" class="active">Festivals</a>
+            </div>
 
-        <div class="Color1">
-            <div class="socials-icon">
-                <a href="https://www.instagram.com/explore/locations/245144032/makati-city-manila-philippines/" target="_blank"><img  src="instagram.png" alt=""></a>
-                <a href="https://www.facebook.com/MyMakatiVerified/" target="_blank"><img  src="facebook.png" alt=""></a>
-                <a href="https://twitter.com/MakatiTraffic?t=jWyq-oTSZa-9E8e_K0YWpw&s=09&fbclid=IwAR3dan7ivDH7JOeA-sifXr9ZLsP7IYAxH-3tYpqpqtvmvfOPMt-Ve-t3s2M" target="_blank"><img src="twitter.png" alt=""></a>
-
+            <div class="social-links">
+                <a href="https://www.instagram.com/explore/locations/245144032/makati-city-manila-philippines/" target="_blank" aria-label="Instagram">
+                    <img src="instagram.png" alt="Instagram">
+                </a>
+                <a href="https://www.facebook.com/MyMakatiVerified/" target="_blank" aria-label="Facebook">
+                    <img src="facebook.png" alt="Facebook">
+                </a>
+                <a href="https://twitter.com/MakatiTraffic?t=jWyq-oTSZa-9E8e_K0YWpw&s=09" target="_blank" aria-label="Twitter">
+                    <img src="twitter.png" alt="Twitter">
+                </a>
             </div>
         </div>
-        
-        <div class="Color2">
-            <div class="Flex1">
-                <h4>CITY OF MAKATI</h4>
-            </div>
+    </nav>
 
-            <div class="Flex2">
-                
-                <a class="pop-places"  href="index.html">Home</a> 
-                <a class="pop-places" href="makati-favoriteplaces.html">Places</a>
-                <a class="text-barangay" href="Tour-Spots.html">Barangays</a>
-                <a class="pop-places" href="makatiofficials.html">Officials</a>
-                <a class="pop-places" href="makatgiabout.html">History</a>
-                <a class="pop-places"  style="text-decoration: underline solid #3C1C1C 40% ;" class="pop-places" href="fistivals.html">Festivals</a>
-
-            </div>
+    <!-- Page Header -->
+    <section class="page-header">
+        <img class="header-background" src="10031f000001gs1l40753_C_880_350_R5.webp" alt="Makati Festivals">
+        <div class="header-overlay"></div>
+        <div class="header-content">
+            <h1 id="pageTitle">Festivals</h1>
+            <p class="header-subtitle" id="pageSubtitle">Experience the vibrant celebrations that showcase Makati's rich culture and traditions</p>
         </div>
-    </div>
+    </section>
 
-    <div class="fistivals-container">
-        <div style="margin-top: 30px;" class="Officials-img">
-            <div  style="align-items: center; display: flex; flex-direction: column;" class="text-imgk">
-                <img class="img-responsive"  src="10031f000001gs1l40753_C_880_350_R5.webp" alt="">
-                <h1>Fistivals</h1>
-            </div>
-        </div>
+    <!-- Main Content -->
+    <div class="festivals-container">
+        <!-- Decorative Elements -->
+        <div class="floating-icon floating-icon-1">🎭</div>
+        <div class="floating-icon floating-icon-2">🎊</div>
+        <div class="floating-icon floating-icon-3">🎉</div>
 
-        <div class="fistivals-imgs-container">
-            <img src="ZZZ_022513_mmanila.jpg" alt="">
-            <div class="fistivals-descriptions">
-                <h1>1. Caracol Festival</h1>
-                <p>Through the passage of Resolution 351, this has been an official festival in Makati that pays tribute to Filipino resilience. The name of the festival was derived from the Spanish word for “snail”, a shelled creature that symbolizes the people’s efforts to combat difficulties. Caracol Festival invites the spectators in merrymaking as the participants parade with their masks and nature-inspired costumes. This takes place during the last Sunday of January and is considered as Makati City’s version of Rio de Janeiro’s Mardi Gras.sss</p>
-            </div>
+        <!-- Section Intro -->
+        <div class="section-intro">
+            <p class="section-label">Celebrations</p>
+            <h2 class="section-title">Annual Festivals</h2>
+            <p class="section-description">Join us in celebrating the spirit of Makati through colorful festivals that honor our heritage and bring communities together</p>
         </div>
 
-        <div class="fistivals-imgs-container">
-            <img src="ncr-national-capital-region-54-320.webp" alt="">
-            <div class="fistivals-descriptions">
-                <h1>2. XONG DI FESTIVAL</h1>
-                <p>The city Makati holds the Xong Di Festival to celebrate the brotherhood between the Chinese and Filipino communities. It aims to strengthen the bond of the two Asian countries by highlighting their cultural similarities. The main attraction of this event is the parade of ethnic costumes and accessories, showcasing an impressive blend of Philippine and Chinese designs. Watch out for this spectacular festival a few days after the Chinese New Year.
+        <!-- Festival 1: Caracol Festival -->
+        <div class="festival-card">
+            <div class="festival-image-container">
+                <div class="festival-number">1</div>
+                <img class="festival-image" src="ZZZ_022513_mmanila.jpg" alt="Caracol Festival">
+            </div>
+            <div class="festival-details">
+                <h3 class="festival-name">Caracol Festival</h3>
+                <p class="festival-description">
+                    Through the passage of Resolution 351, this has been an official festival in Makati that pays tribute to Filipino resilience. The name of the festival was derived from the Spanish word for "snail", a shelled creature that symbolizes the people's efforts to combat difficulties. Caracol Festival invites the spectators in merrymaking as the participants parade with their masks and nature-inspired costumes. This takes place during the last Sunday of January and is considered as Makati City's version of Rio de Janeiro's Mardi Gras.
                 </p>
+                <span class="festival-tag">Last Sunday of January</span>
             </div>
         </div>
 
-        <div class="fistivals-imgs-container">
-            <img src="3352046_orig.jpg" alt="">
-            <div class="fistivals-descriptions">
-                <h1>3. Bailes delos Arcos</h1>
-                <p>Bailes Delos Arcos is one of the most exciting festivals that entices many tourists who book for Makati hotels. Barangay Poblacion holds this annual feast every 29th of June in honor of Virgen Dela Rosa, St. Peter, and St. Paul. This is a much-awaited event because the festival involves the participation of young ladies who train for a year for the so called “Dance of Virgins”. They offer this amazing performance in a kind of pledged devotion to the patron saints.</p>
+        <!-- Festival 2: Xong Di Festival -->
+        <div class="festival-card">
+            <div class="festival-image-container">
+                <div class="festival-number">2</div>
+                <img class="festival-image" src="ncr-national-capital-region-54-320.webp" alt="Xong Di Festival">
+            </div>
+            <div class="festival-details">
+                <h3 class="festival-name">Xong Di Festival</h3>
+                <p class="festival-description">
+                    The city Makati holds the Xong Di Festival to celebrate the brotherhood between the Chinese and Filipino communities. It aims to strengthen the bond of the two Asian countries by highlighting their cultural similarities. The main attraction of this event is the parade of ethnic costumes and accessories, showcasing an impressive blend of Philippine and Chinese designs. Watch out for this spectacular festival a few days after the Chinese New Year.
+                </p>
+                <span class="festival-tag">After Chinese New Year</span>
             </div>
         </div>
 
-        <div class="fistivals-imgs-container">
-            <img src="DQhmi_9VoAA-RaV.jpg_large" alt="">
-            <div class="fistivals-descriptions">
-                <h1>4. Likhang Kamay Festival</h1>
-                <p>If you love buying Filipino products, you should visit the exhibits of Likhang Kamay in Makati City. This is a yearly trade show that has been instrumental in the discovery and development of various native handicrafts producers. It usually features regional goods that champion local culture, which include pottery, woven materials, and wood carvings. Every year, the organizers and tourism department promote this event for broader participation and exposure.</p>
+        <!-- Festival 3: Bailes delos Arcos -->
+        <div class="festival-card">
+            <div class="festival-image-container">
+                <div class="festival-number">3</div>
+                <img class="festival-image" src="3352046_orig.jpg" alt="Bailes delos Arcos">
+            </div>
+            <div class="festival-details">
+                <h3 class="festival-name">Bailes delos Arcos</h3>
+                <p class="festival-description">
+                    Bailes Delos Arcos is one of the most exciting festivals that entices many tourists who book for Makati hotels. Barangay Poblacion holds this annual feast every 29th of June in honor of Virgen Dela Rosa, St. Peter, and St. Paul. This is a much-awaited event because the festival involves the participation of young ladies who train for a year for the so called "Dance of Virgins". They offer this amazing performance in a kind of pledged devotion to the patron saints.
+                </p>
+                <span class="festival-tag">June 29</span>
             </div>
         </div>
 
-        <div class="fistivals-imgs-container">
-            <img src="iconic_belen.jpg" alt="">
-            <div class="fistivals-descriptions">
-                <h1>5. Belen sa Makati</h1>
-                <p>As early as November, Makati radiates the vibrant Yuletide season as it commences the Belen sa Makati Festival. During this time, the city's business district is adorned with giant creches and colorful lanterns. The entire stretch of Ayala Avenue that comes very festive with effervescent Christmas lights is a sure delight to everyone. With the unparalleled grandeur of the event, these wonderful spectacles will never fail to get visitors in the holiday spirit.</p>
+        <!-- Festival 4: Likhang Kamay Festival -->
+        <div class="festival-card">
+            <div class="festival-image-container">
+                <div class="festival-number">4</div>
+                <img class="festival-image" src="DQhmi_9VoAA-RaV.jpg_large" alt="Likhang Kamay Festival">
+            </div>
+            <div class="festival-details">
+                <h3 class="festival-name">Likhang Kamay Festival</h3>
+                <p class="festival-description">
+                    If you love buying Filipino products, you should visit the exhibits of Likhang Kamay in Makati City. This is a yearly trade show that has been instrumental in the discovery and development of various native handicrafts producers. It usually features regional goods that champion local culture, which include pottery, woven materials, and wood carvings. Every year, the organizers and tourism department promote this event for broader participation and exposure.
+                </p>
+                <span class="festival-tag">Annual Trade Show</span>
+            </div>
+        </div>
+
+        <!-- Festival 5: Belen sa Makati -->
+        <div class="festival-card">
+            <div class="festival-image-container">
+                <div class="festival-number">5</div>
+                <img class="festival-image" src="iconic_belen.jpg" alt="Belen sa Makati">
+            </div>
+            <div class="festival-details">
+                <h3 class="festival-name">Belen sa Makati</h3>
+                <p class="festival-description">
+                    As early as November, Makati radiates the vibrant Yuletide season as it commences the Belen sa Makati Festival. During this time, the city's business district is adorned with giant creches and colorful lanterns. The entire stretch of Ayala Avenue that comes very festive with effervescent Christmas lights is a sure delight to everyone. With the unparalleled grandeur of the event, these wonderful spectacles will never fail to get visitors in the holiday spirit.
+                </p>
+                <span class="festival-tag">November - December</span>
             </div>
         </div>
     </div>
 
-    <div class="footer">
-        <p>@2023-2024 ITP4 | All Right Reserved</p>
-    </div>
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2023-2024 ITP4 | All Rights Reserved</p>
+    </footer>
+
+    <script>
+        // Anime.js Animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate page header
+            anime.timeline()
+                .add({
+                    targets: '#pageTitle',
+                    opacity: [0, 1],
+                    translateY: [60, 0],
+                    duration: 1200,
+                    easing: 'easeOutExpo',
+                    delay: 300
+                })
+                .add({
+                    targets: '#pageSubtitle',
+                    opacity: [0, 1],
+                    translateY: [40, 0],
+                    duration: 1000,
+                    easing: 'easeOutExpo',
+                }, '-=700');
+
+            // Animate section intro
+            anime({
+                targets: '.section-intro',
+                opacity: [0, 1],
+                translateY: [50, 0],
+                duration: 1000,
+                easing: 'easeOutExpo',
+                delay: 1200
+            });
+
+            // Animate festival cards with stagger
+            anime({
+                targets: '.festival-card',
+                opacity: [0, 1],
+                translateY: [80, 0],
+                duration: 1000,
+                easing: 'easeOutExpo',
+                delay: anime.stagger(200, {start: 1500})
+            });
+
+            // Animate festival numbers with rotation
+            anime({
+                targets: '.festival-number',
+                scale: [0, 1],
+                rotate: [180, 0],
+                duration: 800,
+                easing: 'easeOutBack',
+                delay: anime.stagger(200, {start: 1800})
+            });
+
+            // Floating icons animation
+            anime({
+                targets: '.floating-icon',
+                translateY: [
+                    { value: -20, duration: 2000 },
+                    { value: 0, duration: 2000 }
+                ],
+                rotate: [
+                    { value: 5, duration: 2000 },
+                    { value: -5, duration: 2000 }
+                ],
+                loop: true,
+                easing: 'easeInOutSine',
+                delay: anime.stagger(500)
+            });
+
+            // Scroll-triggered animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Card highlight animation
+                        anime({
+                            targets: entry.target,
+                            boxShadow: [
+                                '0 8px 30px rgba(0, 0, 0, 0.12)',
+                                '0 20px 60px rgba(212, 175, 55, 0.3)',
+                                '0 8px 30px rgba(0, 0, 0, 0.12)'
+                            ],
+                            duration: 1500,
+                            easing: 'easeInOutQuad'
+                        });
+
+                        // Number pulse animation
+                        const number = entry.target.querySelector('.festival-number');
+                        anime({
+                            targets: number,
+                            scale: [1, 1.2, 1],
+                            duration: 600,
+                            easing: 'easeInOutQuad'
+                        });
+                    }
+                });
+            }, {
+                threshold: 0.3
+            });
+
+            // Observe festival cards
+            document.querySelectorAll('.festival-card').forEach(card => {
+                observer.observe(card);
+            });
+
+            // Card hover animations
+            document.querySelectorAll('.festival-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    // Animate festival name
+                    anime({
+                        targets: this.querySelector('.festival-name'),
+                        color: ['#2c2c2c', '#c41e3a'],
+                        duration: 400,
+                        easing: 'easeOutQuad'
+                    });
+
+                    // Animate tag
+                    anime({
+                        targets: this.querySelector('.festival-tag'),
+                        scale: [1, 1.05],
+                        duration: 300,
+                        easing: 'easeOutQuad'
+                    });
+
+                    // Pulse number
+                    anime({
+                        targets: this.querySelector('.festival-number'),
+                        scale: [1, 1.15, 1],
+                        duration: 500,
+                        easing: 'easeInOutQuad'
+                    });
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    // Reset festival name color
+                    anime({
+                        targets: this.querySelector('.festival-name'),
+                        color: ['#c41e3a', '#2c2c2c'],
+                        duration: 400,
+                        easing: 'easeOutQuad'
+                    });
+
+                    // Reset tag
+                    anime({
+                        targets: this.querySelector('.festival-tag'),
+                        scale: [1.05, 1],
+                        duration: 300,
+                        easing: 'easeOutQuad'
+                    });
+                });
+            });
+
+            // Parallax effect for floating icons
+            let ticking = false;
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    window.requestAnimationFrame(function() {
+                        const scrollPos = window.pageYOffset;
+                        
+                        document.querySelectorAll('.floating-icon').forEach((icon, index) => {
+                            const speed = 0.3 + (index * 0.1);
+                            const yPos = -(scrollPos * speed);
+                            icon.style.transform = `translateY(${yPos}px) rotate(${scrollPos * 0.02}deg)`;
+                        });
+                        
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+
+            // Stagger text reveal for descriptions
+            document.querySelectorAll('.festival-description').forEach((desc, index) => {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            anime({
+                                targets: entry.target,
+                                opacity: [0.5, 1],
+                                duration: 800,
+                                easing: 'easeOutQuad'
+                            });
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.5 });
+                
+                observer.observe(desc);
+            });
+        });
+    </script>
 </body>
 </html>

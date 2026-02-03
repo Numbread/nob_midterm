@@ -3,87 +3,704 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="makati-favoriteplaces.css">
-    <link rel="stylesheet" href="makati.css">
-    <link rel="stylesheet" href="makatiabout.css">
-    <link rel="stylesheet" href="tour-spots.css">
+    <title>History - Makati City</title>
     <link rel="shortcut icon" href="makati-logo.png" type="image/x-icon">
-    <link rel="stylesheet" href="general.css">
-    <title>Makati - History</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        :root {
+            --primary-gold: #D4AF37;
+            --deep-navy: #1a1f3a;
+            --warm-cream: #faf8f3;
+            --accent-red: #c41e3a;
+            --text-dark: #2c2c2c;
+            --text-light: #6b6b6b;
+            --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            color: var(--text-dark);
+            background: var(--warm-cream);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navigation {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 31, 58, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-pic {
+            height: 50px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-pic:hover {
+            transform: scale(1.05);
+        }
+
+        .city-title {
+            color: var(--primary-gold);
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 35px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            padding: 8px 0;
+            transition: color 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-gold);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary-gold);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary-gold);
+            transform: translateY(-3px);
+        }
+
+        .social-links img {
+            width: 18px;
+            height: 18px;
+            filter: brightness(0) invert(1);
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-top: 80px;
+            position: relative;
+            height: 450px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.35);
+        }
+
+        .header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.85) 0%, rgba(196, 30, 58, 0.5) 100%);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            padding: 0 40px;
+        }
+
+        .header-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            opacity: 0;
+        }
+
+        .header-subtitle {
+            font-size: 1.4rem;
+            font-weight: 300;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0;
+        }
+
+        /* Timeline Container */
+        .timeline-container {
+            max-width: 1200px;
+            margin: 100px auto;
+            padding: 0 40px;
+            position: relative;
+        }
+
+        /* Vertical Timeline Line */
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--primary-gold) 0%, var(--accent-red) 100%);
+            transform: translateX(-50%);
+            opacity: 0;
+        }
+
+        /* Timeline Item */
+        .timeline-item {
+            display: flex;
+            margin-bottom: 80px;
+            position: relative;
+            opacity: 0;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        /* Timeline Content */
+        .timeline-content {
+            width: 45%;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-medium);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover .timeline-content {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 30px;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::before {
+            right: -20px;
+            border-width: 15px 0 15px 20px;
+            border-color: transparent transparent transparent white;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::before {
+            left: -20px;
+            border-width: 15px 20px 15px 0;
+            border-color: transparent white transparent transparent;
+        }
+
+        /* Timeline Period Badge */
+        .timeline-badge {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--accent-red) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 0 8px var(--warm-cream), 0 4px 20px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .timeline-badge svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+
+        /* Period Label */
+        .period-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-red);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .period-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--deep-navy);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .period-description {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--text-dark);
+        }
+
+        /* Decorative Elements */
+        .decorative-year {
+            position: absolute;
+            font-family: 'Playfair Display', serif;
+            font-size: 8rem;
+            font-weight: 900;
+            color: rgba(212, 175, 55, 0.05);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .timeline-item:nth-child(odd) .decorative-year {
+            right: -50px;
+            top: -30px;
+        }
+
+        .timeline-item:nth-child(even) .decorative-year {
+            left: -50px;
+            top: -30px;
+        }
+
+        /* Footer */
+        .footer {
+            background: #0f1222;
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+            padding: 40px;
+            font-size: 0.9rem;
+            margin-top: 100px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .timeline-line {
+                left: 40px;
+            }
+
+            .timeline-item,
+            .timeline-item:nth-child(even) {
+                flex-direction: row;
+                padding-left: 80px;
+            }
+
+            .timeline-content {
+                width: 100%;
+            }
+
+            .timeline-content::before {
+                display: none;
+            }
+
+            .timeline-badge {
+                left: 40px;
+            }
+
+            .decorative-year {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                height: auto;
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .header-content h1 {
+                font-size: 3rem;
+            }
+
+            .header-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .timeline-item,
+            .timeline-item:nth-child(even) {
+                padding-left: 60px;
+            }
+
+            .timeline-line {
+                left: 30px;
+            }
+
+            .timeline-badge {
+                left: 30px;
+                width: 60px;
+                height: 60px;
+            }
+
+            .timeline-badge svg {
+                width: 30px;
+                height: 30px;
+            }
+
+            .period-title {
+                font-size: 1.6rem;
+            }
+
+            .timeline-content {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+
+            .header-content h1 {
+                font-size: 2.2rem;
+            }
+
+            .period-title {
+                font-size: 1.4rem;
+            }
+
+            .timeline-content {
+                padding: 25px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="ColorDiv">
-        <div class="logo-pic1">
-            <a href="/makati.html"><img class="logo-pic" src="makati-logo.png" alt=""></a> 
-        </div>
-
-        <div class="Color1">
-            <div class="socials-icon">
-                <a href="https://www.instagram.com/explore/locations/245144032/makati-city-manila-philippines/" target="_blank"><img  src="instagram.png" alt=""></a>
-                <a href="https://www.facebook.com/MyMakatiVerified/" target="_blank"><img  src="facebook.png" alt=""></a>
-                <a href="https://twitter.com/MakatiTraffic?t=jWyq-oTSZa-9E8e_K0YWpw&s=09&fbclid=IwAR3dan7ivDH7JOeA-sifXr9ZLsP7IYAxH-3tYpqpqtvmvfOPMt-Ve-t3s2M" target="_blank"><img src="twitter.png" alt=""></a>
-
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="nav-container">
+            <div class="logo-container">
+                <a href="index.html">
+                    <img class="logo-pic" src="makati-logo.png" alt="Makati City Logo">
+                </a>
+                <span class="city-title">MAKATI</span>
             </div>
-        </div>
-
-       
-        
-        <div class="Color2">
-            <div class="Flex1">
-                <h4>CITY OF MAKATI</h4>
-                
-            </div>
-
-            <div class="Flex2">
-                
-                <a class="pop-places" href="index.html">Home</a>
-                <a class="pop-places" href="makati-favoriteplaces.html">Places</a>
-                <a class="text-barangay" href="Tour-Spots.html">Barangays</a>
-                <a class="pop-places"  href="makatiofficials.html">Officials</a>
-                <a class="pop-places" style="text-decoration: underline solid #3C1C1C 40% ; position: relative;" href="makatgiabout.html">History</a>
-                <a class="pop-places" href="fistivals.html">Festivals</a>
-            </div>
-
             
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="makati-favoriteplaces.html">Places</a>
+                <a href="Tour-Spots.html">Barangays</a>
+                <a href="makatiofficials.html">Officials</a>
+                <a href="makatgiabout.html" class="active">History</a>
+                <a href="fistivals.html">Festivals</a>
+            </div>
+
+            <div class="social-links">
+                <a href="https://www.instagram.com/explore/locations/245144032/makati-city-manila-philippines/" target="_blank" aria-label="Instagram">
+                    <img src="instagram.png" alt="Instagram">
+                </a>
+                <a href="https://www.facebook.com/MyMakatiVerified/" target="_blank" aria-label="Facebook">
+                    <img src="facebook.png" alt="Facebook">
+                </a>
+                <a href="https://twitter.com/MakatiTraffic?t=jWyq-oTSZa-9E8e_K0YWpw&s=09" target="_blank" aria-label="Twitter">
+                    <img src="twitter.png" alt="Twitter">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <img class="header-background" src="10031f000001gs1l40753_C_880_350_R5.webp" alt="Makati History">
+        <div class="header-overlay"></div>
+        <div class="header-content">
+            <h1 id="pageTitle">Our History</h1>
+            <p class="header-subtitle" id="pageSubtitle">From pre-Hispanic settlement to the financial capital of the Philippines</p>
+        </div>
+    </section>
+
+    <!-- Timeline -->
+    <div class="timeline-container">
+        <div class="timeline-line"></div>
+
+        <!-- Pre-Hispanic to Spanish Colonial Period -->
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <span class="decorative-year">1600</span>
+                <p class="period-label">Pre-Hispanic Era</p>
+                <h2 class="period-title">Pre-Hispanic to Spanish Colonial Period</h2>
+                <p class="period-description">
+                    The present Makati City has its roots as a pre-Hispanic settlement in the swamplands near Pasig River led by Lakan Tagkan and his wife Bouan. Don Manuel Lopez de Legaspi, founder of Manila and the first Governor General of the Philippines discovered the area and was told that the river's tide was ebbing by the residents - "Makati na, Kumati na." Legaspi thought this was the response to his query as to what the place is called. The settlement was renamed San Pedro de Makati after its patron saint. A visita of Santa Ana de Sapa, Makati was under the jurisdiction of the Franciscan friars from 1600-1700. Two of the earliest Catholic churches - Nuestra Señora de Gracia in Guadalupe and the Church of Saints Peter and Paul - are located in Makati. In 1890, San Pedro de Makati was decreed a public town of Manila.
+                </p>
+            </div>
+            <div class="timeline-badge">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- American Commonwealth Period -->
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <span class="decorative-year">1901</span>
+                <p class="period-label">1901 - 1945</p>
+                <h2 class="period-title">American Commonwealth Period</h2>
+                <p class="period-description">
+                    After the Americans took over the control of the island of Luzon from the Spaniards at the turn of the 20th century, San Pedro de Makati was incorporated into the province of Rizal under Commonwealth Act No. 137 on June 11, 1901. In the same year, the Americans established Fort William McKinley as a military reservation. In 1902, the Americans described the town as "a pueblo on the south shore of Pasig River," known for a "resort for convalescents," with a population of 3,921. A year later, a town administrator was installed to supervise community affairs. San Pedro de Makati remained a third-class agricultural town wherein the primary means of livelihood came from the cultivation of rice and horse fodder. In 1914, Philippine Legislature Act No. 2390 shortened the name of the town to its present name of Makati. During the birth of commercial aviation before the Second World War, Nielson Airport opened in what is now the Ayala Triangle, the first airport in the country.
+                </p>
+            </div>
+            <div class="timeline-badge">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Post-Second World War to the Present -->
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <span class="decorative-year">1950</span>
+                <p class="period-label">1950 - Present</p>
+                <h2 class="period-title">Post-Second World War to the Present</h2>
+                <p class="period-description">
+                    A master-planned mixed-use community was established in the 1950s in Makati. Makati in the 1970s was a financial and commercial center and part of the National Capital Region (Metro Manila). Makati became a City with the enactment of Republic Act No. 7854 and a plebiscite approval in 1995 during the term of former Mayor Jejomar C. Binay—now the Vice President of the country. Makati has been described as a City of three areas: the Central Business District, the Old Town or Poblacion area, and the Fort Bonifacio area.
+                </p>
+            </div>
+            <div class="timeline-badge">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+            </div>
         </div>
     </div>
 
-    <div class="Barangays-container1">
-        <div style="margin-top: 30px;" class="Officials-img">
-            <div style="align-items: center; display: flex; flex-direction: column;" class="text-imgk">
-                <img class="img-responsive" src="10031f000001gs1l40753_C_880_350_R5.webp" alt="">
-                <h1>History</h1>
-            </div>
-        </div>
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2023-2024 ITP4 | All Rights Reserved</p>
+    </footer>
 
-        <div class="list-history-container">
-            <div class="list-history-box">
-                <h1>
-                    Pre-Hispanic to Spanish Colonial Period</h1>
+    <script>
+        // Anime.js Animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate page header
+            anime.timeline()
+                .add({
+                    targets: '#pageTitle',
+                    opacity: [0, 1],
+                    translateY: [50, 0],
+                    duration: 1000,
+                    easing: 'easeOutExpo',
+                    delay: 300
+                })
+                .add({
+                    targets: '#pageSubtitle',
+                    opacity: [0, 1],
+                    translateY: [30, 0],
+                    duration: 800,
+                    easing: 'easeOutExpo',
+                }, '-=600');
 
-                    <p>The present Makati City has its roots as a pre-Hispanic settlement in the swamplands near Pasig River led by Lakan Tagkan and his wife Bouan. Don Manuel Lopez de Legaspi, founder of Manila and the first Governor General of the Philippines discovered the area and was told that the river''s tide was ebbing by the residents - “Makati na, Kumati na.” Legaspi thought this was the response to his query as to what the place is called. The settlement was renamed San Pedro de Makati after its patron saint. A visita of Santa Ana de Sapa, Makati was under the jurisdiction of the Franciscan friars from 1600-1700. Two (2) of the earliest Catholic churches - Nuestra Señora de Gracia in Guadalupe and the Church of Saints Peter and Paul - are located in Makati. In 1890, San Pedro de Makati was decreed a public town of Manila.</p>
-            </div>
+            // Animate timeline line
+            anime({
+                targets: '.timeline-line',
+                opacity: [0, 1],
+                scaleY: [0, 1],
+                duration: 1500,
+                easing: 'easeOutExpo',
+                delay: 1000,
+                transformOrigin: 'top center'
+            });
 
-            <div class="list-history-box">
-                <h1>
-                    American Commonwealth Period</h1>
+            // Animate timeline items with stagger
+            anime({
+                targets: '.timeline-item',
+                opacity: [0, 1],
+                translateX: function(el, i) {
+                    return i % 2 === 0 ? [-100, 0] : [100, 0];
+                },
+                duration: 1000,
+                easing: 'easeOutExpo',
+                delay: anime.stagger(300, {start: 1500})
+            });
 
-                    <p>After the Americans took over the control of the island of Luzon from the Spaniards at the turn of the 20th century, San Pedro de Makati was incorporated into the province of Rizal under Commonwealth Act No. 137 in June 11, 1901. In the same year, the Americans established Fort William McKinley as a military reservation. In 1902, the Americans described the town as “a pueblo on the south shore of Pasig River,” known for a “resort for convalescents,” with a population of 3,921. A year later, a town administrator was installed to supervise community affairs. San Pedro de Makati remained a third-class agricultural town wherein the primary means of livelihood came from the cultivation of rice and horse fodder. In 1914, Philippine Legislature Act No. 2390 shortened the name of the town to its present name of Makati. During the birth of commercial aviation before the Second World War, Nielson Airport opened in what is now the Ayala Triangle, the first airport in the country.</p>
-            </div>
+            // Animate badges with rotation
+            anime({
+                targets: '.timeline-badge',
+                scale: [0, 1],
+                rotate: [180, 0],
+                duration: 800,
+                easing: 'easeOutBack',
+                delay: anime.stagger(300, {start: 1800})
+            });
 
-            <div style="margin-top: 90px;" class="list-history-box">
-                <h1>
-                    Post-Second World War to the Present</h1>
+            // Scroll-triggered animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Pulse animation when timeline item comes into view
+                        anime({
+                            targets: entry.target.querySelector('.timeline-badge'),
+                            scale: [1, 1.15, 1],
+                            duration: 800,
+                            easing: 'easeInOutQuad'
+                        });
 
-                    <p>A master-planned mixed-use community was established in the 1950s in Makati. Makati in the 1970s was a financial and commercial center and part of the National Capital Region (Metro Manila). Makati became a City with the enactment of Republic Act No. 7854 and a plebiscite approval in 1995 during the term of former Mayor Jejomar C. Binay---now the Vice President of the country. Makati has been described as a City of three areas: the Central Business District, the Old Town or Poblacion area, and the Fort Bonifacio area.</p>
-            </div>
-        </div>
-    </div>
+                        // Highlight effect
+                        anime({
+                            targets: entry.target.querySelector('.timeline-content'),
+                            boxShadow: [
+                                '0 8px 30px rgba(0, 0, 0, 0.12)',
+                                '0 15px 50px rgba(212, 175, 55, 0.25)',
+                                '0 8px 30px rgba(0, 0, 0, 0.12)'
+                            ],
+                            duration: 1500,
+                            easing: 'easeInOutQuad'
+                        });
+                    }
+                });
+            }, {
+                threshold: 0.5
+            });
 
-    <div class="footer2">
-        <p style="color: white;">@2023-2024 ITP4 | All Right Reserved</p>
-    </div>
+            // Observe timeline items
+            document.querySelectorAll('.timeline-item').forEach(item => {
+                observer.observe(item);
+            });
 
+            // Badge rotation on hover
+            document.querySelectorAll('.timeline-badge').forEach(badge => {
+                badge.addEventListener('mouseenter', function() {
+                    anime({
+                        targets: this,
+                        rotate: '+=360',
+                        duration: 800,
+                        easing: 'easeOutExpo'
+                    });
+                });
+            });
 
+            // Parallax effect on scroll
+            let scrollPos = 0;
+            window.addEventListener('scroll', function() {
+                const newScrollPos = window.pageYOffset;
+                const decorativeYears = document.querySelectorAll('.decorative-year');
+                
+                decorativeYears.forEach((year, index) => {
+                    const speed = 0.5 + (index * 0.1);
+                    const yPos = -(newScrollPos * speed);
+                    year.style.transform = `translateY(${yPos}px)`;
+                });
+                
+                scrollPos = newScrollPos;
+            }, { passive: true });
+
+            // Content reveal on hover
+            document.querySelectorAll('.timeline-content').forEach(content => {
+                content.addEventListener('mouseenter', function() {
+                    anime({
+                        targets: this.querySelector('.period-title'),
+                        color: ['#2c2c2c', '#c41e3a'],
+                        duration: 400,
+                        easing: 'easeOutQuad'
+                    });
+                });
+
+                content.addEventListener('mouseleave', function() {
+                    anime({
+                        targets: this.querySelector('.period-title'),
+                        color: ['#c41e3a', '#2c2c2c'],
+                        duration: 400,
+                        easing: 'easeOutQuad'
+                    });
+                });
+            });
+
+            // Progressive text reveal
+            document.querySelectorAll('.period-description').forEach(desc => {
+                const text = desc.textContent;
+                desc.textContent = '';
+                desc.style.opacity = 1;
+                
+                let index = 0;
+                const interval = setInterval(() => {
+                    if (index < text.length) {
+                        desc.textContent += text[index];
+                        index++;
+                    } else {
+                        clearInterval(interval);
+                    }
+                }, 5);
+            });
+        });
+    </script>
 </body>
 </html>

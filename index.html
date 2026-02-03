@@ -43,6 +43,8 @@
             backdrop-filter: blur(10px);
             z-index: 1000;
             transition: all 0.3s ease;
+            /* Hidden initially for anime.js to reveal */
+            opacity: 0; 
         }
 
         .navigation.scrolled {
@@ -184,18 +186,12 @@
             text-align: center;
             max-width: 900px;
             padding: 0 40px;
-            animation: fadeInUp 1s ease;
+            /* Removed default CSS animation to let Anime.js take over */
         }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        
+        /* Initial state for hero elements to avoid flash before animation */
+        .hero-title, .hero-subtitle, .hero-cta {
+            opacity: 0;
         }
 
         .hero-title {
@@ -392,6 +388,8 @@
             overflow: hidden;
             transition: all 0.3s ease;
             box-shadow: var(--shadow-soft);
+            /* Hidden initially for anime.js stagger effect */
+            opacity: 0; 
         }
 
         .news-card:hover {
@@ -521,7 +519,7 @@
             }
         }
 
-        /* Scroll Animation */
+        /* CSS Scroll Animation (For Single Elements) */
         .fade-in {
             opacity: 0;
             transform: translateY(30px);
@@ -535,7 +533,6 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
     <nav class="navigation" id="navigation">
         <div class="nav-container">
             <div class="logo-container">
@@ -568,7 +565,6 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section class="hero">
         <img class="hero-background" src="6.jpg" alt="Makati City Skyline">
         <div class="hero-overlay"></div>
@@ -579,7 +575,6 @@
         </div>
     </section>
 
-    <!-- Mayor Section -->
     <section class="mayor-section fade-in">
         <div class="mayor-image-container">
             <div class="mayor-frame">
@@ -614,7 +609,6 @@
         </div>
     </section>
 
-    <!-- News Section -->
     <section class="news-section">
         <div class="news-container">
             <div class="news-header fade-in">
@@ -623,7 +617,7 @@
             </div>
 
             <div class="news-grid">
-                <article class="news-card fade-in">
+                <article class="news-card">
                     <img class="news-image" src="illegal-detention-charges.jpg" alt="News Image">
                     <div class="news-content">
                         <p class="news-date">March 5, 2024</p>
@@ -632,7 +626,7 @@
                     </div>
                 </article>
 
-                <article class="news-card fade-in">
+                <article class="news-card">
                     <img class="news-image" src="download (3).jpeg" alt="Robotics Team">
                     <div class="news-content">
                         <p class="news-date">March 4, 2024</p>
@@ -641,7 +635,7 @@
                     </div>
                 </article>
 
-                <article class="news-card fade-in">
+                <article class="news-card">
                     <img class="news-image" src="IMG_4609.jpeg" alt="Makati Park">
                     <div class="news-content">
                         <p class="news-date">February 29, 2024</p>
@@ -650,7 +644,7 @@
                     </div>
                 </article>
 
-                <article class="news-card fade-in">
+                <article class="news-card">
                     <img class="news-image" src="download (4).jpeg" alt="Swimming Facility">
                     <div class="news-content">
                         <p class="news-date">March 5, 2024</p>
@@ -659,7 +653,7 @@
                     </div>
                 </article>
 
-                <article class="news-card fade-in">
+                <article class="news-card">
                     <img class="news-image" src="2_2024-02-23_21-49-08.jpg" alt="Ambulance">
                     <div class="news-content">
                         <p class="news-date">March 5, 2024</p>
@@ -668,7 +662,7 @@
                     </div>
                 </article>
 
-                <article class="news-card fade-in">
+                <article class="news-card">
                     <img class="news-image" src="download (5).jpeg" alt="Makati Park Security">
                     <div class="news-content">
                         <p class="news-date">March 5, 2024</p>
@@ -680,13 +674,14 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <p>© 2023-2024 ITP4 | All Rights Reserved</p>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
     <script>
-        // Scroll effect for navigation
+        // --- 1. Navbar Background Scroll Effect ---
         const navigation = document.getElementById('navigation');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
@@ -696,21 +691,67 @@
             }
         });
 
-        // Fade-in animation on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
+        // --- 2. CSS Fade-in Observer (Kept for Single Elements like Mayor Section) ---
+        const cssObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
                 }
             });
-        }, observerOptions);
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        document.querySelectorAll('.fade-in').forEach(el => cssObserver.observe(el));
+
+        // --- 3. Anime.js Implementation ---
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // A. Initial Page Load Animations
+            
+            // Animate Navbar Sliding Down
+            anime({
+                targets: '.navigation',
+                translateY: [-100, 0],
+                opacity: [0, 1],
+                duration: 1200,
+                easing: 'easeOutExpo'
+            });
+
+            // Animate Hero Content (Title, Subtitle, Button) with Stagger
+            anime({
+                targets: ['.hero-title', '.hero-subtitle', '.hero-cta'],
+                translateY: [50, 0],
+                opacity: [0, 1],
+                delay: anime.stagger(200, {start: 500}), // Delay starts after nav appears
+                duration: 1200,
+                easing: 'easeOutExpo'
+            });
+        });
+
+        // B. Scroll Trigger Animation for News Grid
+        // We use Intersection Observer to trigger Anime.js when we reach the section
+        const newsGrid = document.querySelector('.news-grid');
+        
+        const newsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Trigger Anime.js Stagger Effect on Cards
+                    anime({
+                        targets: '.news-card',
+                        translateY: [50, 0],
+                        opacity: [0, 1],
+                        delay: anime.stagger(150), // 150ms delay between each card
+                        duration: 800,
+                        easing: 'easeOutQuad'
+                    });
+                    // Stop observing once animation triggers
+                    newsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        if(newsGrid) {
+            newsObserver.observe(newsGrid);
+        }
     </script>
 </body>
 </html>
